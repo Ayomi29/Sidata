@@ -6,16 +6,11 @@
 import 'package:sidata/core/route/app_route_name.dart';
 import 'package:flutter/material.dart';
 
-// class DivisionScreen extends StatelessWidget {
-//   const DivisionScreen({super.key});
-
-//   @override
-
-// }
 class DivisionScreen extends StatefulWidget {
   const DivisionScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _DivisionScreenState createState() => _DivisionScreenState();
 }
 
@@ -32,12 +27,37 @@ class _DivisionScreenState extends State<DivisionScreen> {
           scrollDirection: Axis.horizontal,
           child: Column(
             children: [
+              Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: Text(
+                    'Data Divisi Perusahaan',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  )),
+              Align(
+                alignment: Alignment.centerLeft,
+                // margin: EdgeInsets.symmetric(vertical: 20),
+                child: SizedBox(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, AppRouteName.create_division);
+                    },
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                    ),
+                    child: const Text("Input data baru"),
+                  ),
+                ),
+              ),
               DataTable(
                 // ignore: prefer_const_literals_to_create_immutables
                 columns: <DataColumn>[
                   DataColumn(label: Text("#")),
                   DataColumn(label: Text("Nama Bagian")),
-                  DataColumn(label: Text("Kode Bagian")),
                   DataColumn(label: Text("Action")),
                 ],
                 rows: <DataRow>[
@@ -45,13 +65,12 @@ class _DivisionScreenState extends State<DivisionScreen> {
                     cells: <DataCell>[
                       DataCell(Text("1")),
                       DataCell(Text("Direksi")),
-                      DataCell(Text("A01")),
                       DataCell(
                         SizedBox(
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.pushNamed(
-                                  context, AppRouteName.employees);
+                                  context, AppRouteName.edit_division);
                             },
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all<
@@ -71,13 +90,12 @@ class _DivisionScreenState extends State<DivisionScreen> {
                     cells: <DataCell>[
                       DataCell(Text("2")),
                       DataCell(Text("Bagian Umum")),
-                      DataCell(Text("A10")),
                       DataCell(
                         SizedBox(
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.pushNamed(
-                                  context, AppRouteName.employees);
+                                  context, AppRouteName.edit_division);
                             },
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all<
@@ -95,15 +113,6 @@ class _DivisionScreenState extends State<DivisionScreen> {
                   ),
                 ],
               ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, AppRouteName.divisions);
-                  },
-                  child: Icon(Icons.add),
-                ),
-              )
             ],
           ),
         ),
