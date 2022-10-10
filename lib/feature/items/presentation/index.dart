@@ -50,8 +50,10 @@ class _ItemScreenState extends State<ItemScreen> {
                 // ignore: prefer_const_literals_to_create_immutables
                 columns: <DataColumn>[
                   DataColumn(label: Text("#")),
-                  DataColumn(label: Text("Nama Bagian")),
-                  DataColumn(label: Text("Kode Bagian")),
+                  DataColumn(label: Text("Nama Barang")),
+                  DataColumn(label: Text("Type Barang")),
+                  DataColumn(label: Text("Brand Barang")),
+                  DataColumn(label: Text("Keadaan Barang")),
                   DataColumn(label: Text("Action")),
                 ],
                 rows: <DataRow>[

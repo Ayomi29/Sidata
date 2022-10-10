@@ -24,7 +24,7 @@ class _DivisionScreenState extends State<DivisionScreen> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+          // scrollDirection: Axis.horizontal,
           child: Column(
             children: [
               Container(
