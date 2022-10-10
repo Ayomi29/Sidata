@@ -4,8 +4,8 @@ import 'package:sidata/core/theme/app_color.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class ItemScreen extends StatelessWidget {
+  const ItemScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

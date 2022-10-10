@@ -1,5 +1,6 @@
 import 'package:sidata/core/component/app_text_field.dart';
 import 'package:sidata/core/route/app_route_name.dart';
+
 import 'package:sidata/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
@@ -80,54 +81,60 @@ class RegisterScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "By signing up, you're agree to our ",
-                          style: Theme.of(context).textTheme.button,
-                        ),
-                        TextSpan(
-                          text: "Term & Condition",
-                          style: Theme.of(context)
-                              .textTheme
-                              .button
-                              ?.copyWith(color: AppColor.primaryColor),
-                        ),
-                        TextSpan(
-                          text: " and ",
-                          style: Theme.of(context).textTheme.button,
-                        ),
-                        TextSpan(
-                          text: "privacy Policy",
-                          style: Theme.of(context)
-                              .textTheme
-                              .button
-                              ?.copyWith(color: AppColor.primaryColor),
-                        ),
-                      ],
+                  Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "By signing up, you're agree to our ",
+                            style: Theme.of(context).textTheme.button,
+                          ),
+                          TextSpan(
+                            text: "Term & Condition",
+                            style: Theme.of(context)
+                                .textTheme
+                                .button
+                                ?.copyWith(color: AppColor.primaryColor),
+                          ),
+                          TextSpan(
+                            text: " and ",
+                            style: Theme.of(context).textTheme.button,
+                          ),
+                          TextSpan(
+                            text: "privacy Policy",
+                            style: Theme.of(context)
+                                .textTheme
+                                .button
+                                ?.copyWith(color: AppColor.primaryColor),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 64,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          AppRouteName.login,
-                        );
-                      },
-                      style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                  // const SizedBox(height: 16),
+
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 20),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            AppRouteName.login,
+                          );
+                        },
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                           ),
                         ),
+                        child: const Text("Register"),
                       ),
-                      child: const Text("Register"),
                     ),
                   ),
                 ],
