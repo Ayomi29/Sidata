@@ -1,11 +1,43 @@
 import 'package:sidata/core/component/app_text_field.dart';
 import 'package:sidata/core/route/app_route_name.dart';
 import 'package:sidata/core/theme/app_color.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import '../../../service/auth.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String? errorMessage = '';
+  bool isLogin = true;
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future<void> signIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim());
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,19 +68,41 @@ class LoginScreen extends StatelessWidget {
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(Icons.alternate_email_rounded),
-                    hint: "Email Address",
-                    textInputAction: TextInputAction.done,
+                children: [
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      hintText: 'Email Address',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      prefixIcon: Icon(Icons.alternate_email_rounded),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
                   SizedBox(height: 24),
-                  AppTextField(
+                  TextField(
                     obscureText: true,
-                    prefix: Icon(Icons.lock_outline_rounded),
-                    suffix: Icon(Icons.remove_red_eye_outlined),
-                    hint: "Password",
-                    textInputAction: TextInputAction.done,
+                    // ignore: prefer_const_constructors
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      prefixIcon: Icon(Icons.lock_outline_rounded),
+                      suffixIcon: Icon(Icons.remove_red_eye_outlined),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
                 ],
               ),
@@ -57,9 +111,7 @@ class LoginScreen extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(vertical: 20),
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, AppRouteName.homepage);
-                    },
+                    onPressed: signIn,
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(

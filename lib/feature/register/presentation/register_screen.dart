@@ -1,11 +1,46 @@
-import 'package:sidata/core/component/app_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:sidata/core/route/app_route_name.dart';
 
 import 'package:sidata/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmpasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmpasswordController.dispose();
+    super.dispose();
+  }
+
+  Future signUp() async {
+    if (passwordConfirmed()) {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim());
+    }
+  }
+
+  bool passwordConfirmed() {
+    if (_passwordController.text.trim() ==
+        _confirmpasswordController.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,31 +83,63 @@ class RegisterScreen extends StatelessWidget {
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(Icons.person_outline),
-                    hint: "Username",
-                    textInputAction: TextInputAction.done,
+                children: [
+                  // email address
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      hintText: 'Email Address',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      prefixIcon: Icon(Icons.alternate_email_rounded),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
                   SizedBox(height: 24),
-                  AppTextField(
-                    prefix: Icon(Icons.alternate_email_rounded),
-                    hint: "Email Address",
-                    textInputAction: TextInputAction.done,
-                  ),
-                  SizedBox(height: 24),
-                  AppTextField(
-                    prefix: Icon(Icons.phone_outlined),
-                    hint: "Phone Number",
-                    textInputAction: TextInputAction.done,
-                  ),
-                  SizedBox(height: 24),
-                  AppTextField(
+
+                  // password
+                  TextField(
                     obscureText: true,
-                    prefix: Icon(Icons.lock_outline_rounded),
-                    suffix: Icon(Icons.remove_red_eye_outlined),
-                    hint: "Password",
-                    textInputAction: TextInputAction.done,
+                    // ignore: prefer_const_constructors
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      prefixIcon: Icon(Icons.lock_outline_rounded),
+                      suffixIcon: Icon(Icons.remove_red_eye_outlined),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                  // confirm password
+                  TextField(
+                    obscureText: true,
+                    // ignore: prefer_const_constructors
+                    controller: _confirmpasswordController,
+                    decoration: InputDecoration(
+                      hintText: 'Confirm Password',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      prefixIcon: Icon(Icons.lock_outline_rounded),
+                      suffixIcon: Icon(Icons.remove_red_eye_outlined),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
                 ],
               ),
@@ -119,12 +186,7 @@ class RegisterScreen extends StatelessWidget {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppRouteName.login,
-                          );
-                        },
+                        onPressed: signUp,
                         style: ButtonStyle(
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
