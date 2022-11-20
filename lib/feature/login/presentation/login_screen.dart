@@ -4,7 +4,6 @@ import 'package:sidata/core/theme/app_color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import '../../../service/auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
