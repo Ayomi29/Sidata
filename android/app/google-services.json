@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "42177728815",
+    "project_id": "sidata-972ff",
+    "storage_bucket": "sidata-972ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42177728815:android:16f7d23f381c79dcedd1da",
+        "android_client_info": {
+          "package_name": "com.example.sidata"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "42177728815-798hfa5crh3egvpnjpnt6i6vvpjaf0oj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBXadrgTKIMSFKF409KrpMFLbRc_TA0ho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "42177728815-798hfa5crh3egvpnjpnt6i6vvpjaf0oj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
