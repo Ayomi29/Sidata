@@ -1,12 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sidata/core/responsive.dart';
 import 'package:sidata/core/theme/app_color.dart';
 import 'package:sidata/feature/homepage/component/menu_btn.dart';
 import 'package:sidata/feature/homepage/component/menu_image.dart';
 
-class HomepageScreen extends StatelessWidget {
+class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
 
+  @override
+  State<HomepageScreen> createState() => _HomepageScreenState();
+}
+
+class _HomepageScreenState extends State<HomepageScreen> {
+  final user = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +51,16 @@ class HomepageScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                MaterialButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                  color: AppColor.primaryColor,
+                  child: Text(
+                    'Sign Out',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )
               ],
             ),
             mobile: const MobileWelcomeScreen(),

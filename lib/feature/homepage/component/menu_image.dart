@@ -1,10 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class MenuImage extends StatelessWidget {
+class MenuImage extends StatefulWidget {
   const MenuImage({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<MenuImage> createState() => _MenuImageState();
+}
+
+class _MenuImageState extends State<MenuImage> {
+  final user = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -15,7 +22,7 @@ class MenuImage extends StatelessWidget {
         children: [
           // ignore: prefer_const_constructors
           Text(
-            "WELCOME TO SIDATA",
+            "WELCOME TO SIDATA " + user.email!,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
 

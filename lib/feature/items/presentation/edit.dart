@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:sidata/core/component/app_text_field.dart';
 import 'package:sidata/core/route/app_route_name.dart';
 
@@ -50,7 +51,7 @@ class EditItemScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: const [
                   AppTextField(
-                    prefix: Icon(Icons.person_outline),
+                    prefix: Icon(Icons.device_unknown_outlined),
                     hint: "Nama Barang",
                     textInputAction: TextInputAction.done,
                   ),
@@ -60,7 +61,7 @@ class EditItemScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: const [
                   AppTextField(
-                    prefix: Icon(Icons.person_outline),
+                    prefix: Icon(CupertinoIcons.briefcase),
                     hint: "Type Barang",
                     textInputAction: TextInputAction.done,
                   ),
@@ -70,7 +71,7 @@ class EditItemScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: const [
                   AppTextField(
-                    prefix: Icon(Icons.person_outline),
+                    prefix: Icon(Icons.branding_watermark_outlined),
                     hint: "Brand Barang",
                     textInputAction: TextInputAction.done,
                   ),
@@ -80,7 +81,7 @@ class EditItemScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: const [
                   AppTextField(
-                    prefix: Icon(Icons.person_outline),
+                    prefix: Icon(Icons.calendar_month_outlined),
                     hint: "Purchase Date",
                     textInputAction: TextInputAction.done,
                   ),
@@ -90,7 +91,7 @@ class EditItemScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: const [
                   AppTextField(
-                    prefix: Icon(Icons.person_outline),
+                    prefix: Icon(Icons.build_circle_outlined),
                     hint: "Keadaan Barang",
                     textInputAction: TextInputAction.done,
                   ),
