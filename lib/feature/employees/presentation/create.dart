@@ -1,11 +1,27 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:sidata/core/component/app_text_field.dart';
 import 'package:sidata/core/route/app_route_name.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:sidata/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class CreateEmployeeScreen extends StatelessWidget {
-  const CreateEmployeeScreen({super.key});
+  // const CreateEmployeeScreen({super.key});
+  final _formKey = GlobalKey<FormState>();
+
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _divisionIdController = TextEditingController();
+
+  final String url = "https://sidata-backend.000webhostapp.com/api/employees/";
+  Future createEmployee() async {
+    final resp = await http.post(Uri.parse(url), body: {
+      "name": _nameController,
+      "division_id": _divisionIdController,
+    });
+    return json.decode(resp.body);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,25 +62,35 @@ class CreateEmployeeScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(Icons.person_outline),
-                    hint: "Nama Pegawai",
-                    textInputAction: TextInputAction.done,
-                  ),
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(Icons.person_outline),
-                    hint: "Nama Bagian",
-                    textInputAction: TextInputAction.done,
-                  ),
-                ],
+              Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(labelText: "Employee name"),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "masukan input dengan benar";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    TextFormField(
+                      controller: _divisionIdController,
+                      decoration: InputDecoration(labelText: "division id"),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "masukan input dengan benar";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -79,10 +105,18 @@ class CreateEmployeeScreen extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppRouteName.employees,
-                          );
+                          if (_formKey.currentState!.validate()) {
+                            createEmployee().then((value) {
+                              Navigator.pushNamed(
+                                context,
+                                AppRouteName.employees,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Data pegawai berhasil di buat')));
+                            });
+                          } else {}
                         },
                         style: ButtonStyle(
                           shape:

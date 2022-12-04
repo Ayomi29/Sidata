@@ -1,15 +1,10 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:sidata/main_auth.dart';
-
+import 'package:sidata/feature/login/presentation/login_screen.dart';
 import 'core/route/app_route.dart';
 import 'core/route/app_route_name.dart';
 import 'core/theme/app_theme.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
+void main() {
   runApp(const MyApp());
 }
 
@@ -23,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: "Sidata",
       theme: AppTheme.light,
       themeMode: ThemeMode.light,
-      home: MainPage(),
+      home: LoginScreen(),
       onGenerateRoute: AppRoute.generate,
     );
   }

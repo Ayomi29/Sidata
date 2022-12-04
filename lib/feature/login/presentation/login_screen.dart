@@ -1,10 +1,10 @@
-import 'package:sidata/core/component/app_text_field.dart';
+import 'dart:convert';
 import 'package:sidata/core/route/app_route_name.dart';
 import 'package:sidata/core/theme/app_color.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import '../../../service/auth.dart';
+import 'package:http/http.dart' as http;
+import 'package:sidata/feature/homepage/presentation/homepage_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,29 +14,32 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String? errorMessage = '';
-  bool isLogin = true;
+  final String url = "https://sidata-backend.000webhostapp.com/api/login";
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  Future<void> signIn() async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim());
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
-    }
-  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> signIn() async {
+    print("sending request");
+    final response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          "Content-Type": "application/json;charset=UTF-8"
+        },
+        body: jsonEncode(<String, String>{
+          "email": _emailController.text,
+          "password": _passwordController.text
+        }));
+    print("login!!");
+    if (response.statusCode == 200) {
+      print(" login complete");
+    }
   }
 
   @override
@@ -111,7 +114,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   margin: const EdgeInsets.symmetric(vertical: 20),
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
-                    onPressed: signIn,
+                    onPressed: () {
+                      signIn();
+                      Navigator.pushNamed(context, AppRouteName.homepage);
+                    },
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(

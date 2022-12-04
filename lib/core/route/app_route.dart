@@ -82,7 +82,7 @@ class AppRoute {
       case AppRouteName.create_employees:
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (_, __, ___) => const CreateEmployeeScreen(),
+          pageBuilder: (_, __, ___) => CreateEmployeeScreen(),
           transitionDuration: const Duration(milliseconds: 400),
           transitionsBuilder: (_, animation, __, child) {
             // slide in transition,
@@ -96,23 +96,7 @@ class AppRoute {
             );
           },
         );
-      case AppRouteName.edit_employees:
-        return PageRouteBuilder(
-          settings: settings,
-          pageBuilder: (_, __, ___) => const EditEmployeeScreen(),
-          transitionDuration: const Duration(milliseconds: 400),
-          transitionsBuilder: (_, animation, __, child) {
-            // slide in transition,
-            // from bottom (y = 1) to center (y = 0) screen
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, 1),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
-            );
-          },
-        );
+
       case AppRouteName.divisions:
         return PageRouteBuilder(
           settings: settings,
@@ -133,7 +117,7 @@ class AppRoute {
       case AppRouteName.create_division:
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (_, __, ___) => const CreateDivisionScreen(),
+          pageBuilder: (_, __, ___) => CreateDivisionScreen(),
           transitionDuration: const Duration(milliseconds: 400),
           transitionsBuilder: (_, animation, __, child) {
             // slide in transition,
@@ -147,23 +131,7 @@ class AppRoute {
             );
           },
         );
-      case AppRouteName.edit_division:
-        return PageRouteBuilder(
-          settings: settings,
-          pageBuilder: (_, __, ___) => const EditDivisionScreen(),
-          transitionDuration: const Duration(milliseconds: 400),
-          transitionsBuilder: (_, animation, __, child) {
-            // slide in transition,
-            // from bottom (y = 1) to center (y = 0) screen
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, 1),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
-            );
-          },
-        );
+
       case AppRouteName.items:
         return PageRouteBuilder(
           settings: settings,

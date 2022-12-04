@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:convert';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:sidata/core/route/app_route_name.dart';
-
 import 'package:sidata/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -13,32 +13,42 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final String url = "https://sidata-backend.000webhostapp.com/api/register";
   final _emailController = TextEditingController();
+  final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmpasswordController = TextEditingController();
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmpasswordController.dispose();
     super.dispose();
   }
 
   Future signUp() async {
-    if (passwordConfirmed()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim());
-    }
-  }
-
-  bool passwordConfirmed() {
-    if (_passwordController.text.trim() ==
-        _confirmpasswordController.text.trim()) {
-      return true;
+    print("sending request");
+    final resp = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          "Content-Type": "application/json;charset=UTF-8"
+        },
+        body: jsonEncode(<String, String>{
+          'name': _nameController.text,
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        }));
+    print("register!!");
+    if (resp.statusCode == 200) {
+      print("complete");
     } else {
-      return false;
+      CoolAlert.show(
+          context: context,
+          backgroundColor: Color(0xFFff9934),
+          type: CoolAlertType.error,
+          title: 'Error',
+          text: "Data yang Dimasukkan Salah!",
+          confirmBtnText: 'Oke',
+          confirmBtnColor: Color(0xFFff9934));
     }
   }
 
@@ -84,6 +94,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      hintText: 'Username',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      prefixIcon: Icon(Icons.person_outline),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                  SizedBox(height: 24),
                   // email address
                   TextField(
                     // ignore: prefer_const_constructors
@@ -110,25 +137,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _passwordController,
                     decoration: InputDecoration(
                       hintText: 'Password',
-                      fillColor: Colors.grey[200],
-                      filled: true,
-                      prefixIcon: Icon(Icons.lock_outline_rounded),
-                      suffixIcon: Icon(Icons.remove_red_eye_outlined),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColor.primaryColor),
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                  ),
-                  // confirm password
-                  TextField(
-                    obscureText: true,
-                    // ignore: prefer_const_constructors
-                    controller: _confirmpasswordController,
-                    decoration: InputDecoration(
-                      hintText: 'Confirm Password',
                       fillColor: Colors.grey[200],
                       filled: true,
                       prefixIcon: Icon(Icons.lock_outline_rounded),
@@ -186,7 +194,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
-                        onPressed: signUp,
+                        onPressed: () {
+                          signUp();
+                          Navigator.pushNamed(context, AppRouteName.login);
+                        },
                         style: ButtonStyle(
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(

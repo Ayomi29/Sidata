@@ -1,11 +1,27 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:sidata/core/component/app_text_field.dart';
 import 'package:sidata/core/route/app_route_name.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:sidata/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class CreateDivisionScreen extends StatelessWidget {
-  const CreateDivisionScreen({super.key});
+  // const CreateDivisionScreen({super.key});
+  final _formKey = GlobalKey<FormState>();
+
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _divisionCodeController = TextEditingController();
+
+  final String url = "https://sidata-backend.000webhostapp.com/api/divisions/";
+  Future createDivision() async {
+    final resp = await http.post(Uri.parse(url), body: {
+      "name": _nameController,
+      "division_code": _divisionCodeController,
+    });
+    return json.decode(resp.body);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,15 +62,35 @@ class CreateDivisionScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(Icons.person_outline),
-                    hint: "Nama Bagian",
-                    textInputAction: TextInputAction.done,
-                  ),
-                ],
+              Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(labelText: "division name"),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "masukan input dengan benar";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    TextFormField(
+                      controller: _divisionCodeController,
+                      decoration: InputDecoration(labelText: "division code"),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "masukan input dengan benar";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -69,10 +105,18 @@ class CreateDivisionScreen extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppRouteName.divisions,
-                          );
+                          if (_formKey.currentState!.validate()) {
+                            createDivision().then((value) {
+                              Navigator.pushNamed(
+                                context,
+                                AppRouteName.divisions,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Data divisi berhasil di buat')));
+                            });
+                          } else {}
                         },
                         style: ButtonStyle(
                           shape:

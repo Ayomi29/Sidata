@@ -1,11 +1,32 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:sidata/core/component/app_text_field.dart';
 import 'package:sidata/core/route/app_route_name.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:sidata/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class EditEmployeeScreen extends StatelessWidget {
-  const EditEmployeeScreen({super.key});
+  // const EditEmployeeScreen({super.key});
+  final Map employee;
+
+  EditEmployeeScreen({required this.employee});
+  final _formKey = GlobalKey<FormState>();
+
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _divisionIdController = TextEditingController();
+
+  Future updateEmployee() async {
+    final resp = await http.put(
+        Uri.parse("https://sidata-backend.000webhostapp.com/api/employees/" +
+            employee['id'].toString()),
+        body: {
+          "name": _nameController,
+          "division_id": _divisionIdController,
+        });
+    return json.decode(resp.body);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,30 +62,41 @@ class EditEmployeeScreen extends StatelessWidget {
                 margin: EdgeInsets.only(top: 100, bottom: 30),
                 alignment: Alignment.center,
                 child: Text(
-                  "Update Data Pegawai",
+                  "Input Data Baru",
                   style: Theme.of(context).textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(Icons.person_outline),
-                    hint: "Nama Pegawai",
-                    textInputAction: TextInputAction.done,
-                  ),
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(Icons.person_outline),
-                    hint: "Nama Bagian",
-                    textInputAction: TextInputAction.done,
-                  ),
-                ],
+              Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: _nameController..text = employee['name'],
+                      decoration: InputDecoration(labelText: "Employee name"),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "masukan input dengan benar";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    TextFormField(
+                      controller: _divisionIdController
+                        ..text = employee['division_id'],
+                      decoration: InputDecoration(labelText: "division id"),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "masukan input dengan benar";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -79,10 +111,18 @@ class EditEmployeeScreen extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppRouteName.employees,
-                          );
+                          if (_formKey.currentState!.validate()) {
+                            updateEmployee().then((value) {
+                              Navigator.pushNamed(
+                                context,
+                                AppRouteName.employees,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Data pegawai berhasil di update')));
+                            });
+                          } else {}
                         },
                         style: ButtonStyle(
                           shape:
@@ -92,7 +132,7 @@ class EditEmployeeScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        child: const Text("Update"),
+                        child: const Text("Submit"),
                       ),
                     ),
                   ),
