@@ -1,12 +1,50 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:sidata/core/component/app_text_field.dart';
 import 'package:sidata/core/route/app_route_name.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:sidata/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class EditItemScreen extends StatelessWidget {
-  const EditItemScreen({super.key});
+  final Map item;
+
+  EditItemScreen({required this.item});
+
+  final _nameController = TextEditingController();
+  final _typeController = TextEditingController();
+  final _brandController = TextEditingController();
+  final _serialController = TextEditingController();
+  final _purchaseController = TextEditingController();
+  final _macAddController = TextEditingController();
+  final _ipAddController = TextEditingController();
+  final _itemStateController = TextEditingController();
+
+  final String url = "https://sidata-backend.000webhostapp.com/api/items/";
+
+  Future updateItem() async {
+    print("sending request");
+    final resp = await http.put(Uri.parse(url + item['id'].toString()),
+        headers: <String, String>{
+          "Content-Type": "application/json;charset=UTF-8"
+        },
+        body: jsonEncode(<String, String>{
+          'name': _nameController.text,
+          'type': _typeController.text,
+          'brand': _brandController.text,
+          'serial': _serialController.text,
+          'purchase_date': _purchaseController.text,
+          'mac_address': _macAddController.text,
+          'ip_address': _ipAddController.text,
+          'item_state': _itemStateController.text,
+        }));
+    print("update item!!");
+    if (resp.statusCode == 200) {
+      print("complete");
+    } else {
+      throw Exception('data not updated');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,52 +87,151 @@ class EditItemScreen extends StatelessWidget {
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(Icons.device_unknown_outlined),
-                    hint: "Nama Barang",
-                    textInputAction: TextInputAction.done,
+                children: [
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _nameController..text = item['name'],
+                    decoration: InputDecoration(
+                      hintText: 'Nama barang',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      // prefixIcon: Icon(Icons.person_outline),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(CupertinoIcons.briefcase),
-                    hint: "Type Barang",
-                    textInputAction: TextInputAction.done,
+                  SizedBox(height: 12),
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _typeController..text = item['type'],
+                    decoration: InputDecoration(
+                      hintText: 'Tipe barang',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      // prefixIcon: Icon(Icons.workspaces_outline),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(Icons.branding_watermark_outlined),
-                    hint: "Brand Barang",
-                    textInputAction: TextInputAction.done,
+                  SizedBox(
+                    height: 12,
                   ),
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(Icons.calendar_month_outlined),
-                    hint: "Purchase Date",
-                    textInputAction: TextInputAction.done,
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _brandController..text = item['brand'],
+                    decoration: InputDecoration(
+                      hintText: 'Brand barang',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      // prefixIcon: Icon(Icons.workspaces_outline),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  AppTextField(
-                    prefix: Icon(Icons.build_circle_outlined),
-                    hint: "Keadaan Barang",
-                    textInputAction: TextInputAction.done,
+                  SizedBox(
+                    height: 12,
                   ),
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _serialController
+                      ..text = item['serial'].toString(),
+                    decoration: InputDecoration(
+                      hintText: 'Serial number barang',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      // prefixIcon: Icon(Icons.workspaces_outline),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _purchaseController
+                      ..text = item['purchase_date'].toString(),
+                    decoration: InputDecoration(
+                      hintText: 'Tanggal beli barang',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      // prefixIcon: Icon(Icons.workspaces_outline),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _macAddController
+                      ..text = item['mac_address'].toString(),
+                    decoration: InputDecoration(
+                      hintText: 'Mac address barang',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      // prefixIcon: Icon(Icons.workspaces_outline),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _ipAddController
+                      ..text = item['ip_address'].toString(),
+                    decoration: InputDecoration(
+                      hintText: 'IP address barang',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      // prefixIcon: Icon(Icons.workspaces_outline),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _itemStateController..text = item['item_state'],
+                    decoration: InputDecoration(
+                      hintText: 'Keadaan barang',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      // prefixIcon: Icon(Icons.workspaces_outline),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                  SizedBox(height: 12),
                 ],
               ),
               Column(
@@ -110,6 +247,7 @@ class EditItemScreen extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
                         onPressed: () {
+                          updateItem();
                           Navigator.pushNamed(
                             context,
                             AppRouteName.items,

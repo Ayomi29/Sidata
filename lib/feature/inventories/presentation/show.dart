@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 
-class DetailEmployee extends StatelessWidget {
-  final Map employee;
+class DetailInventory extends StatelessWidget {
+  final Map inventory;
 
-  DetailEmployee({required this.employee});
+  DetailInventory({required this.inventory});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class DetailEmployee extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        'Nama pegawai:',
+                        'ID pegawai:',
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w700),
                       ),
@@ -36,7 +36,7 @@ class DetailEmployee extends StatelessWidget {
                         width: 12,
                       ),
                       Text(
-                        employee['name'],
+                        inventory['employee_id'].toString(),
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w700),
                       ),
@@ -49,7 +49,7 @@ class DetailEmployee extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        'Kode divisi:',
+                        'ID barang:',
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w700),
                       ),
@@ -57,7 +57,49 @@ class DetailEmployee extends StatelessWidget {
                         width: 12,
                       ),
                       Text(
-                        employee['division_id'].toString(),
+                        inventory['item_id'].toString(),
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'ID user petugas:',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(
+                        inventory['user_id'].toString(),
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Kode Unit Barang:',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(
+                        inventory['unit_code'].toString(),
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w700),
                       ),
@@ -66,10 +108,10 @@ class DetailEmployee extends StatelessWidget {
                 ),
                 // GestureDetector(
                 //     onTap: () {
-                //       deleteemployee(employee['id']);
+                //       deleteinventory(inventory['id']);
                 //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 //           content: Text('Data divisi berhasil di hapus')));
-                //       Navigator.pushNamed(context, AppRouteName.employees);
+                //       Navigator.pushNamed(context, AppRouteName.inventorys);
                 //     },
                 //     child: Icon(Icons.delete)),
               ],

@@ -1,5 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+import 'dart:convert';
 import 'package:sidata/core/route/app_route_name.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:sidata/feature/inventories/presentation/edit.dart';
+import 'package:sidata/feature/inventories/presentation/show.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
@@ -10,90 +15,140 @@ class InventoryScreen extends StatefulWidget {
 }
 
 class _InventoryScreenState extends State<InventoryScreen> {
+  final String url = 'https://sidata-backend.000webhostapp.com/api/inventories';
+
+  Future getInventories() async {
+    var resp = await http.get(Uri.parse(url));
+    return json.decode(resp.body);
+    print(json.decode(resp.body));
+  }
+
+  Future deleteInventory(String employeeId) async {
+    String url2 =
+        'https://sidata-backend.000webhostapp.com/api/employees/' + employeeId;
+    var response = await http.delete(Uri.parse(url2));
+    return json.decode(response.body);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Data Inventaris Perusahaan"),
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Column(
-            children: [
-              Container(
-                  margin: EdgeInsets.only(top: 20),
-                  child: Text(
-                    'Data Inventaris Perusahaan',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  )),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
-                child: SizedBox(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                          context, AppRouteName.create_inventories);
-                    },
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                    ),
-                    child: const Text("Input data baru"),
-                  ),
-                ),
-              ),
-              DataTable(
-                  // ignore: prefer_const_literals_to_create_immutables
-                  columns: <DataColumn>[
-                    DataColumn(label: Text("#")),
-                    DataColumn(label: Text("Nama Barang")),
-                    DataColumn(label: Text("Nama Pegawai")),
-                    DataColumn(label: Text("Bagian")),
-                    DataColumn(label: Text("Type Barang")),
-                    DataColumn(label: Text("Brand Barang")),
-                    DataColumn(label: Text("Keadaan Barang")),
-                    DataColumn(label: Text("Action")),
-                  ], rows: <DataRow>[
-                DataRow(
-                  cells: <DataCell>[
-                    DataCell(Text("1")),
-                    DataCell(Text("Laptop Asus Rog")),
-                    DataCell(Text("Lead")),
-                    DataCell(Text("Direksi")),
-                    DataCell(Text("Laptop")),
-                    DataCell(Text("Asus")),
-                    DataCell(Text("Berfungsi")),
-                    DataCell(
-                      SizedBox(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                                context, AppRouteName.edit_inventories);
-                          },
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                          ),
-                          child: const Text("Update"),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ]),
-            ],
-          ),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.pushNamed(context, AppRouteName.create_inventories);
+            },
+            child: Icon(Icons.add)),
+        appBar: AppBar(
+          title: Text("Data Inventaris Perusahaan"),
         ),
-      ),
-    );
+        body: FutureBuilder(
+          future: getInventories(),
+          builder: (context, snapshot) {
+            return ListView.builder(
+                // shrinkWrap: true,
+                itemCount: snapshot.data['data'].length,
+                itemBuilder: ((context, index) {
+                  return Container(
+                      height: 100,
+                      padding: EdgeInsets.all(5),
+                      child: Card(
+                        elevation: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "ID Item:",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    snapshot.data['data'][index]['item_id']
+                                        .toString(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "ID Pegawai:",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    snapshot.data['data'][index]['employee_id']
+                                        .toString(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DetailInventory(
+                                                        inventory: snapshot
+                                                                .data['data']
+                                                            [index])));
+                                      },
+                                      child: Icon(Icons.details_outlined)),
+                                  SizedBox(width: 4),
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditnventoryScreem(
+                                                      inventory: snapshot
+                                                          .data['data'][index],
+                                                    )));
+                                      },
+                                      child: Icon(Icons.edit)),
+                                  SizedBox(width: 4),
+                                  GestureDetector(
+                                      onTap: () {
+                                        deleteInventory(snapshot.data['data']
+                                                    [index]['id']
+                                                .toString())
+                                            .then((value) => {
+                                                  setState(() {}),
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              'Data pegawai berhasil di update')))
+                                                });
+                                      },
+                                      child: Icon(Icons.delete)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ));
+                }));
+
+            // if (snapshot.hasData) {
+            // } else {
+            //   return Text("Data error");
+            // }
+          },
+        ));
   }
 }

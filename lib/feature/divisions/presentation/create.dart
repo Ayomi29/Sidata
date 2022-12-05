@@ -1,26 +1,52 @@
 import 'dart:convert';
-
-import 'package:flutter/services.dart';
-import 'package:sidata/core/component/app_text_field.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:sidata/core/route/app_route_name.dart';
-import 'package:http/http.dart' as http;
 import 'package:sidata/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class CreateDivisionScreen extends StatelessWidget {
-  // const CreateDivisionScreen({super.key});
-  final _formKey = GlobalKey<FormState>();
+class CreateDivisionScreen extends StatefulWidget {
+  const CreateDivisionScreen({super.key});
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _divisionCodeController = TextEditingController();
+  @override
+  State<CreateDivisionScreen> createState() => _CreateDivisionScreenState();
+}
 
-  final String url = "https://sidata-backend.000webhostapp.com/api/divisions/";
+class _CreateDivisionScreenState extends State<CreateDivisionScreen> {
+  final String url = "https://sidata-backend.000webhostapp.com/api/divisions";
+  final _nameController = TextEditingController();
+  final _divisionCodeController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _divisionCodeController.dispose();
+    super.dispose();
+  }
+
   Future createDivision() async {
-    final resp = await http.post(Uri.parse(url), body: {
-      "name": _nameController,
-      "division_code": _divisionCodeController,
-    });
-    return json.decode(resp.body);
+    print("sending request");
+    final resp = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          "Content-Type": "application/json;charset=UTF-8"
+        },
+        body: jsonEncode(<String, String>{
+          'name': _nameController.text,
+          'division_code': _divisionCodeController.text,
+        }));
+    print("create divisi!!");
+    if (resp.statusCode == 200) {
+      print("complete");
+    } else {
+      CoolAlert.show(
+          context: context,
+          backgroundColor: Color(0xFFff9934),
+          type: CoolAlertType.error,
+          title: 'Error',
+          text: "Data yang Dimasukkan Salah!",
+          confirmBtnText: 'Oke',
+          confirmBtnColor: Color(0xFFff9934));
+    }
   }
 
   @override
@@ -42,81 +68,71 @@ class CreateDivisionScreen extends StatelessWidget {
       extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top,
-            bottom: MediaQuery.of(context).padding.bottom,
-            left: 24,
-            right: 24,
-          ),
+          padding: const EdgeInsets.all(30.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: MediaQuery.of(context).size.width,
                 margin: EdgeInsets.only(top: 100, bottom: 30),
-                alignment: Alignment.center,
                 child: Text(
-                  "Input Data Baru",
+                  "Input data divisi baru",
                   style: Theme.of(context).textTheme.headlineMedium,
-                  textAlign: TextAlign.center,
                 ),
               ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(labelText: "division name"),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "masukan input dengan benar";
-                        } else {
-                          return null;
-                        }
-                      },
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      hintText: 'nama divisi baru',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      // prefixIcon: Icon(Icons.person_outline),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
                     ),
-                    TextFormField(
-                      controller: _divisionCodeController,
-                      decoration: InputDecoration(labelText: "division code"),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "masukan input dengan benar";
-                        } else {
-                          return null;
-                        }
-                      },
+                  ),
+                  SizedBox(height: 24),
+                  // division_code
+                  TextField(
+                    // ignore: prefer_const_constructors
+                    controller: _divisionCodeController,
+                    decoration: InputDecoration(
+                      hintText: 'kode divisi',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      // prefixIcon: Icon(Icons.workspaces_outline),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                          borderRadius: BorderRadius.circular(12)),
                     ),
-                  ],
-                ),
+                  ),
+                  // SizedBox(height: 24),
+                ],
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // const SizedBox(height: 16),
-
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 20),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            createDivision().then((value) {
-                              Navigator.pushNamed(
-                                context,
-                                AppRouteName.divisions,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          'Data divisi berhasil di buat')));
-                            });
-                          } else {}
+                          createDivision();
+                          Navigator.pushNamed(context, AppRouteName.divisions);
                         },
                         style: ButtonStyle(
                           shape:
@@ -126,7 +142,7 @@ class CreateDivisionScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        child: const Text("Submit"),
+                        child: const Text("submit"),
                       ),
                     ),
                   ),

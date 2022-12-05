@@ -14,16 +14,16 @@ class EditEmployeeScreen extends StatelessWidget {
   EditEmployeeScreen({required this.employee});
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _divisionIdController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _divisionIdController = TextEditingController();
 
   Future updateEmployee() async {
     final resp = await http.put(
         Uri.parse("https://sidata-backend.000webhostapp.com/api/employees/" +
             employee['id'].toString()),
         body: {
-          "name": _nameController,
-          "division_id": _divisionIdController,
+          "name": _nameController.text,
+          "division_id": _divisionIdController.text,
         });
     return json.decode(resp.body);
   }
@@ -62,7 +62,7 @@ class EditEmployeeScreen extends StatelessWidget {
                 margin: EdgeInsets.only(top: 100, bottom: 30),
                 alignment: Alignment.center,
                 child: Text(
-                  "Input Data Baru",
+                  "Update Data Pegawai",
                   style: Theme.of(context).textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -85,7 +85,7 @@ class EditEmployeeScreen extends StatelessWidget {
                     ),
                     TextFormField(
                       controller: _divisionIdController
-                        ..text = employee['division_id'],
+                        ..text = employee['division_id'].toString(),
                       decoration: InputDecoration(labelText: "division id"),
                       validator: (value) {
                         if (value == null || value.isEmpty) {

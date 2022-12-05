@@ -18,7 +18,7 @@ class DivisionScreen extends StatefulWidget {
 }
 
 class _DivisionScreenState extends State<DivisionScreen> {
-  final String url = 'https://sidata-backend.000webhostapp.com/api/divisions/';
+  final String url = 'https://sidata-backend.000webhostapp.com/api/divisions';
 
   Future getDivisions() async {
     var resp = await http.get(Uri.parse(url));
@@ -27,83 +27,101 @@ class _DivisionScreenState extends State<DivisionScreen> {
   }
 
   Future deleteDivision(String divisionId) async {
-    String url =
+    String url2 =
         'https://sidata-backend.000webhostapp.com/api/divisions/' + divisionId;
-    var response = await http.delete(Uri.parse(url));
+    var response = await http.delete(Uri.parse(url2));
     return jsonDecode(response.body);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, AppRouteName.create_division);
+          },
+          child: Icon(Icons.add)),
       appBar: AppBar(
         title: Text("Data Divisi Perusahaan"),
       ),
       body: FutureBuilder(
         future: getDivisions(),
         builder: (context, snapshot) {
-            return ListView.builder(
-              itemCount: snapshot.data['data'].length,
-              itemBuilder: (((context, index) {
-                return Container(
-                    height: 100,
-                    padding: EdgeInsets.all(5),
-                    child: Card(
-                      elevation: 5,
+          return ListView.builder(
+            itemCount: snapshot.data['data'].length,
+            itemBuilder: (((context, index) {
+              return Container(
+                  height: 100,
+                  padding: EdgeInsets.all(5),
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            snapshot.data['data'][index]['name'],
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w700),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                snapshot.data['data'][index]['name'],
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w700),
+                              ),
+                            ],
                           ),
                           Text(
                             snapshot.data['data'][index]['division_code'],
                             style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w500),
+                                fontSize: 15, fontWeight: FontWeight.w500),
                           ),
-                          GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => DetailDivision(
-                                            division: snapshot.data['data']
-                                                [index])));
-                              },
-                              child: Icon(Icons.details_outlined)),
-                          GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditDivisionScreen(
-                                              division: snapshot.data['data']
-                                                  [index],
-                                            )));
-                              },
-                              child: Icon(Icons.edit)),
-                          GestureDetector(
-                              onTap: () {
-                                deleteDivision(snapshot.data['data'][index]
-                                            ['id']
-                                        .toString())
-                                    .then((value) => {
-                                          setState(() {}),
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: Text(
-                                                      'Data pegawai berhasil di update')))
-                                        });
-                              },
-                              child: Icon(Icons.delete)),
+                          Row(
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DetailDivision(
+                                                    division: snapshot
+                                                        .data['data'][index])));
+                                  },
+                                  child: Icon(Icons.details_outlined)),
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                EditDivisionScreen(
+                                                  division: snapshot
+                                                      .data['data'][index],
+                                                )));
+                                  },
+                                  child: Icon(Icons.edit)),
+                              GestureDetector(
+                                  onTap: () {
+                                    deleteDivision(snapshot.data['data'][index]
+                                                ['id']
+                                            .toString())
+                                        .then((value) => {
+                                              setState(() {}),
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          'Data pegawai berhasil di update')))
+                                            });
+                                  },
+                                  child: Icon(Icons.delete)),
+                            ],
+                          ),
                         ],
                       ),
-                    ));
-              })),
-            );
+                    ),
+                  ));
+            })),
+          );
           // if (snapshot.hasData) {
           // } else {
           //   return Text("Data error");

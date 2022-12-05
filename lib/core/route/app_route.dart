@@ -166,23 +166,23 @@ class AppRoute {
             );
           },
         );
-      case AppRouteName.edit_items:
-        return PageRouteBuilder(
-          settings: settings,
-          pageBuilder: (_, __, ___) => const EditItemScreen(),
-          transitionDuration: const Duration(milliseconds: 400),
-          transitionsBuilder: (_, animation, __, child) {
-            // slide in transition,
-            // from bottom (y = 1) to center (y = 0) screen
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, 1),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
-            );
-          },
-        );
+      // case AppRouteName.edit_items:
+      //   return PageRouteBuilder(
+      //     settings: settings,
+      //     pageBuilder: (_, __, ___) => EditItemScreen(item),
+      //     transitionDuration: const Duration(milliseconds: 400),
+      //     transitionsBuilder: (_, animation, __, child) {
+      //       // slide in transition,
+      //       // from bottom (y = 1) to center (y = 0) screen
+      //       return SlideTransition(
+      //         position: Tween<Offset>(
+      //           begin: const Offset(0, 1),
+      //           end: Offset.zero,
+      //         ).animate(animation),
+      //         child: child,
+      //       );
+      //     },
+      //   );
       case AppRouteName.inventories:
         return PageRouteBuilder(
           settings: settings,
@@ -217,23 +217,23 @@ class AppRoute {
             );
           },
         );
-      case AppRouteName.edit_inventories:
-        return PageRouteBuilder(
-          settings: settings,
-          pageBuilder: (_, __, ___) => const EditInventoryScreen(),
-          transitionDuration: const Duration(milliseconds: 400),
-          transitionsBuilder: (_, animation, __, child) {
-            // slide in transition,
-            // from bottom (y = 1) to center (y = 0) screen
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, 1),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
-            );
-          },
-        );
+      // case AppRouteName.edit_inventories:
+      //   return PageRouteBuilder(
+      //     settings: settings,
+      //     pageBuilder: (_, __, ___) => const EditInventoryScreen(),
+      //     transitionDuration: const Duration(milliseconds: 400),
+      //     transitionsBuilder: (_, animation, __, child) {
+      //       // slide in transition,
+      //       // from bottom (y = 1) to center (y = 0) screen
+      //       return SlideTransition(
+      //         position: Tween<Offset>(
+      //           begin: const Offset(0, 1),
+      //           end: Offset.zero,
+      //         ).animate(animation),
+      //         child: child,
+      //       );
+      //     },
+      //   );
     }
 
     return null;
